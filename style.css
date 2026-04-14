@@ -1,49 +1,180 @@
-body{
-    padding: 20px;
-    border-radius: 10px;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-}
-body *{
-    body {
-    font-family: var(--fontStack-sansSerif);
-    font-size: var(--body-font-size, 14px);
-    font-weight: var(--base-text-weight-normal, 400);
-    color: var(--fgColor-default, var(--color-fg-default));
-    background-color: var(--bgColor-default, var(--color-canvas-default));
-    line-height: 1.5;
-    color-scheme: light dark;
-}
-}
-.country-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;   
-    border-bottom: 1px solid black;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
-.black-mode *{
-    background-attachment: white;
-    color: white;
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1e3c72, #2a5298);
+  color: #fff;
+  transition: 0.4s ease;
 }
 
-.country-list{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    list-style: none;
-    padding: 16px;
+.country-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 40px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.country{
+.country-header h2 {
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+
+.filter-box {
+  display: flex;
+  gap: 15px;
+  padding: 20px 40px;
+  flex-wrap: wrap;
+}
+
+.search-name-inp,
+.filter-region,
+.site-bg {
+  flex: 1;
+  min-width: 180px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: rgba(55, 143, 243, 0.61);
+  color: rgb(255, 255, 255);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: 0.3s;
+}
+
+.search-name-inp::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.search-name-inp:focus,
+.filter-region:focus,
+.site-bg:focus {
+  transform: scale(1.03);
+  border: 1px solid #00c6ff;
+  box-shadow: 0 0 15px rgba(0,198,255,0.4);
+}
+
+.country-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  padding: 30px 40px;
+  list-style: none;
+}
+
+.country {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: 0.4s ease;
+  cursor: pointer;
+}
+
+.country:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.country img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  filter: brightness(0.95);
+}
+
+.country h3 {
+  padding: 10px 14px;
+  font-size: 16px;
+}
+
+.country p {
+  padding: 0 14px 12px;
+  opacity: 0.8;
+}
+
+.like {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.3s;
+  filter: drop-shadow(0 0 5px rgba(255,0,0,0.5));
+}
+
+.like:hover {
+  transform: scale(1.4) rotate(10deg);
+}
+
+#loader {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.8);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  width: 320px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 20px;
+  animation: pop 0.35s ease;
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.black-mode {
+  background: radial-gradient(circle at top, #000428, #004e92);
+}
+
+@media (max-width: 768px) {
+  .country-header {
+    flex-direction: column;
+    gap: 10px;
     text-align: center;
-    border: 1px solid black;
-    margin: 16px;
-    background: orchid;
-    background-color: rgb(255, 192, 203, 0.5);
-    border-radius: 10px;
-}
-.filter-box{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  }
+
+  .filter-box {
+    flex-direction: column;
+  }
 }

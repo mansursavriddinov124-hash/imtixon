@@ -2,70 +2,110 @@ const elSelectBg = document.querySelector(".site-bg");
 const elCountryList = document.querySelector(".country-list");
 const elSearchInp = document.querySelector(".search-name-inp");
 const elFilterRegion = document.querySelector(".filter-region");
+const loader = document.getElementById("loader");
 
-const changeSiteColor = (color) => {
-    if(color){
-        if(color == "black"){
-            window.localStorage.setItem("siteColor", "black")
-            document.body.classList.add("black-mode")
-        }else{
-            document.body.classList.remove("black-mode")
-            window.localStorage.setItem("siteColor", "white")
-        }
-        document.body.style.backgroundColor = color
-    }
-}
-
-elSelectBg.addEventListener("change", () => {
-    const siteColor = elSelectBg.value;
-    if(siteColor == "black") changeSiteColor("black")
-    if(siteColor == "white") changeSiteColor("white")
-})
-
-const siteColor = localStorage.getItem("siteColor");
-
-changeSiteColor(siteColor);
+const modal = document.querySelector(".modal");
+const modalBody = document.querySelector(".modal-body");
+const closeModal = document.querySelector(".close");
 
 const BASE_URL = "https://restcountries.com/v3.1";
 
-async function getCountries(){
-    try{
-        const req = await fetch(`${BASE_URL}/all?fields=name,capital,currencies,population,flags`);
-        const res = await req.json();
-        handleRenderCountries(res);
-    }catch(err){
-        console.log(err)
-    }
-}
+let allCountries = [];
+let favorites = JSON.parse(localStorage.getItem("fav")) || [];
 
+/* THEME */
+elSelectBg.addEventListener("change", (e) => {
+  if (e.target.value === "black") {
+    document.body.classList.add("black-mode");
+  } else {
+    document.body.classList.remove("black-mode");
+  }
+});
+
+/* FETCH */
+async function getCountries() {
+  loader.classList.remove("hidden");
+
+  const res = await fetch(`${BASE_URL}/all?fields=name,flags,population,capital,region`);
+  const data = await res.json();
+
+  allCountries = data;
+  render(data);
+
+  loader.classList.add("hidden");
+}
 getCountries();
 
-function handleRenderCountries(arr){
-    elCountryList.innerHTML = null;
-    for(let country of arr){
-        elCountryList.innerHTML += `
-        <li class="country">
-            <img width="300" height="200" src="${country.flags.png}" alt="${country.flags.alt}">
-            <h3>Name: ${country.name.common}</h3>
-            <h3>Population: ${country.population}</h3>
-            <h3>Capital: ${country.capital[0]}</h3>
-        </li>
-        `
-    }
+/* RENDER */
+function render(data) {
+  elCountryList.innerHTML = "";
+
+  data.forEach(country => {
+    const isFav = favorites.includes(country.name.common);
+
+    elCountryList.innerHTML += `
+      <li class="country" onclick="openModal('${country.name.common}')">
+        <img src="${country.flags.png}">
+        <h3>${country.name.common}</h3>
+        <p>${country.region}</p>
+
+        <span class="like" onclick="toggleFav(event,'${country.name.common}')">
+          ${isFav ? "❤️" : "🤍"}
+        </span>
+      </li>
+    `;
+  });
 }
 
-elSearchInp.addEventListener("change", async () => {
-    const searchValue = elSearchInp.value;
-    if(!searchValue) return confirm('Search value is empty !');
-    const req = await fetch(`${BASE_URL}/name/${searchValue}`);
-    const res = await req.json();
-    handleRenderCountries(res)
-})
+/* SEARCH */
+elSearchInp.addEventListener("input", () => {
+  const value = elSearchInp.value.toLowerCase();
 
-elFilterRegion.addEventListener("change", async () => {
-    const regionVal = elFilterRegion.value;
-    if(regionVal == "all") return getCountries()
-    const req = await fetch(`${BASE_URL}/region/${regionVal}`);
-    const res = await req.json();
-    handleRenderCountries(res)
-})
+  const filtered = allCountries.filter(c =>
+    c.name.common.toLowerCase().includes(value)
+  );
+
+  render(filtered);
+});
+
+/* FILTER */
+elFilterRegion.addEventListener("change", () => {
+  if (elFilterRegion.value === "all") return render(allCountries);
+
+  const filtered = allCountries.filter(c =>
+    c.region.toLowerCase() === elFilterRegion.value
+  );
+
+  render(filtered);
+});
+
+/* FAVORITES */
+function toggleFav(e, name) {
+  e.stopPropagation();
+
+  if (favorites.includes(name)) {
+    favorites = favorites.filter(f => f !== name);
+  } else {
+    favorites.push(name);
+  }
+
+  localStorage.setItem("fav", JSON.stringify(favorites));
+  render(allCountries);
+}
+
+/* MODAL */
+function openModal(name) {
+  const country = allCountries.find(c => c.name.common === name);
+
+  modalBody.innerHTML = `
+    <h2>${country.name.common}</h2>
+    <img src="${country.flags.png}" width="100%">
+    <p>Population: ${country.population}</p>
+    <p>Region: ${country.region}</p>
+    <p>Capital: ${country.capital}</p>
+  `;
+
+  modal.classList.remove("hidden");
+}
+
+closeModal.onclick = () => modal.classList.add("hidden");

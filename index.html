@@ -1,38 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAVLATLAR</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
 
-    <div class="country-header">
-        <h2>Where in the world</h2>
+<header class="country-header">
+  <h2>🌍 DAVLATLAR
 
-        <select style="color: black;" class="site-bg">
-            <option value="" selected disabled hidden>Site BG</option>
-            <option value="black">Black</option>
-            <option value="white">White</option>
-        </select>
-    </div>
-    <div class="filter-box">
-        <input class="search-name-inp" type="text" placeholder="Search...">
-        <select class="filter-region">
-            <option value="" selected disabled hidden>Filter by region</option>
-            <option value="asia">Asia</option>
-            <option value="europe">Europe</option>
-            <option value="africa">Africa</option>
-            <option value="australia">Australia</option>
-            <option value="all">All</option>
-        </select>
-    </div>
-    <ul class="country-list">
-        
-    </ul>
+  </h2>
+  <br>
+
+  <select class="site-bg">
+    <option value="white">Light</option>
+    <option value="black">Dark</option>
+  </select>
+</header>
+
+<div class="filter-box">
+  <input class="search-name-inp" type="text" placeholder="🔍 Search country...">
+
+  <select class="filter-region">
+    <option value="all">All regions</option>
+    <option value="asia">Asia</option>
+    <option value="europe">Europe</option>
+    <option value="africa">Africa</option>
+    <option value="americas">Americas</option>
+    <option value="oceania">Oceania</option>
+  </select>
+</div>
+
+<div id="loader" class="hidden">Loading countries...</div>
+
+<ul class="country-list"></ul>
 
 
-    <script src="./index.js"></script>
+<script src="./index.js"></script>
 </body>
 </html>
